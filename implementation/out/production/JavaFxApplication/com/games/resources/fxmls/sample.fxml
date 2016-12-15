@@ -13,13 +13,25 @@
   <children>
     <SplitPane dividerPositions="0.7183718371837183" focusTraversable="true" prefHeight="160.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="454.0" prefWidth="540.0">
+        <AnchorPane fx:id="gameAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="454.0" prefWidth="540.0">
           <children>
-            <ImageView fitHeight="428.0001220703125" fitWidth="627.3333129882812" layoutX="13.0" layoutY="13.0" pickOnBounds="true" preserveRatio="false" smooth="false">
+            <ImageView fitHeight="454.0" fitWidth="650.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="false" smooth="false">
               <image>
-                <Image url="@../images/backgraund_0002_Фон.jpg" />
+                <Image url="@../images/backgraund.png" />
               </image>
             </ImageView>
+            <ImageView fx:id="startPlayerCore" fitHeight="102.25" fitWidth="102.25" layoutX="15.0" layoutY="338.0" pickOnBounds="true" preserveRatio="true">
+              <image>
+                <Image url="@../images/core_green.png" />
+              </image>
+            </ImageView>
+            <ImageView fx:id="startEnemyCore" fitHeight="97.20059747775363" fitWidth="102.2499771118164" layoutX="531.0" layoutY="337.0" pickOnBounds="true" preserveRatio="true">
+              <image>
+                <Image url="@../images/core_red.png" />
+              </image>
+            </ImageView>
+            <Label fx:id="labelPlayerCountPhage" layoutX="57.0" layoutY="380.0" text="Lab" />
+            <Label fx:id="labelEnemyCountPhage" layoutX="574.0" layoutY="376.0" text="Lab" />
           </children>
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
