@@ -26,14 +26,15 @@ public class ActivationCorbaController  {
     @FXML
     public void createCorbaSettingsListeners(ActionEvent event) throws IOException {
         Stage primaryStage = (Stage)((Button) event.getSource()).getScene().getWindow();
-
-        Parent root = FXMLLoader.load(getClass().getResource("/fxmls/sample.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        Parent root = loader.load(getClass().getResource("/fxmls/sample.fxml"));
         primaryStage.setTitle("War Phage");
 
         SeterAnimation animation = SeterAnimation.getInstance();
         animation.set().play();
 
         Scene scene = new Scene(root, 920, 460);
+
         scene.getStylesheets().add(this.getClass().getResource("/css/style.css").toExternalForm());
         primaryStage.setScene(scene);
 

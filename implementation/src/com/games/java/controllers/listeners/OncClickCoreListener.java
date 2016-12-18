@@ -1,8 +1,9 @@
 package com.games.java.controllers.listeners;
 
 import com.games.java.controllers.Controller;
-import com.games.java.model.field.Core;
+
 import com.games.java.model.players.Player;
+import com.games.java.model.players.corba.idls.game.Core;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;

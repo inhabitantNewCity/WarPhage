@@ -3,10 +3,12 @@ package com.games.java.model.utils.generaters;
 import com.games.java.model.field.Core;
 import com.games.java.model.field.Field;
 import com.games.java.model.field.FieldSimple;
-import com.games.java.model.utils.SizeCore;
-import com.games.java.model.utils.StateCore;
+import com.games.java.model.players.corba.idls.game.Point2D;
 
-import com.sun.javafx.geom.Point2D;
+import com.games.java.model.players.corba.idls.game.SizeCore;
+import com.games.java.model.players.corba.idls.game.StateCore;
+
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -41,7 +43,7 @@ public class SimpleGenerator implements Generator {
             core.setId(i);
             cores.add(core);
         }
-
+        startChangedForField();
         return cores;
     }
 
@@ -53,21 +55,42 @@ public class SimpleGenerator implements Generator {
     }
 
     private void generateLocation(Core core) {
-        Point2D location = new Point2D();
+        Point2D location = new com.games.java.model.utils.Point2D();
         do{
-            location.x = (OFFSET + SIZE_BIG_CORE / 2) + random.nextInt(SIZE_OF_FIELD_X - 2 * (SIZE_BIG_CORE / 2 + OFFSET) + 1);
-            location.y = (OFFSET + SIZE_BIG_CORE / 2) + random.nextInt(SIZE_OF_FIELD_Y - 2 * (SIZE_BIG_CORE / 2 + OFFSET) + 1);
-        }while(PointInBoxChecker.isPointInBox(location.x, location.y, cores));
+            location.setX((OFFSET + SIZE_BIG_CORE / 2) + random.nextInt(SIZE_OF_FIELD_X - 2 * (SIZE_BIG_CORE / 2 + OFFSET) + 1));
+            location.setY((OFFSET + SIZE_BIG_CORE / 2) + random.nextInt(SIZE_OF_FIELD_Y - 2 * (SIZE_BIG_CORE / 2 + OFFSET) + 1));
+        }while(PointInBoxChecker.isPointInBox(location.getX(), location.getY(), cores));
 
         core.setLocation(location);
     }
 
+    private void startChangedForField(){
+        Core startPlayerOneCore = new Core(StateCore.GREEN);
+        Core startPlayerEnemyCore = new Core(StateCore.RED);
+
+        startPlayerOneCore.setLocation(LOCATION_PLAYER_ONE);
+        startPlayerEnemyCore.setLocation(LOCATION_PLAYER_ENEMY);
+
+        startPlayerEnemyCore.setSize(SizeCore.BIG_CORE);
+        startPlayerOneCore.setSize(SizeCore.BIG_CORE);
+
+        startPlayerEnemyCore.setCountPhage(START_COUNT_PHAGE);
+        startPlayerOneCore.setCountPhage(START_COUNT_PHAGE);
+
+        startPlayerEnemyCore.setId(numberCores);
+        startPlayerOneCore.setId(numberCores + 1);
+
+        cores.add(startPlayerEnemyCore);
+        cores.add(startPlayerOneCore);
+
+
+    }
     static private class PointInBoxChecker {
 
-        public static boolean isPointInBox(float x, float y, List<Core> space){
+        public static boolean isPointInBox(double x, double y, List<Core> space){
             for(Core core : space){
-                if(((core.getLocation().x - SIZE_BIG_CORE <= x) && (core.getLocation().x + SIZE_BIG_CORE >= x)) &&
-                        ((core.getLocation().y - SIZE_BIG_CORE <= y) && (core.getLocation().y + SIZE_BIG_CORE >= y)))
+                if(((core.getLocation().getX() - SIZE_BIG_CORE <= x) && (core.getLocation().getX() + SIZE_BIG_CORE >= x)) &&
+                        ((core.getLocation().getY() - SIZE_BIG_CORE <= y) && (core.getLocation().getY() + SIZE_BIG_CORE >= y)))
                     return true;
             }
             return false;

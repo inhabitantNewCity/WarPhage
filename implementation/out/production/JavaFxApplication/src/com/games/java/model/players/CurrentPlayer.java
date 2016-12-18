@@ -1,20 +1,24 @@
 package com.games.java.model.players;
 
 import com.games.java.controllers.Controller;
-import com.games.java.model.field.Core;
-import com.games.java.model.utils.StateCore;
+import com.games.java.model.players.corba.idls.game.Core;
+import com.games.java.model.players.corba.idls.game.PlayerPOA;
+import com.games.java.model.players.corba.idls.game.StateCore;
+import org.omg.CORBA.*;
+import org.omg.CORBA.Object;
 
 /**
  * Created by Tmp on 11.12.2016.
  */
 //todo: create necessary functianality for User, this entity should manage madel
 //todo: update view though controller
-public class CurrentPlayer implements Player {
+public class CurrentPlayer extends PlayerPOA implements Player {
 
 
     private Controller controller;
     private Core previousSelectedCore;
     private StateCore state;
+
 
     public CurrentPlayer(StateCore state){
         this.state = state;
@@ -27,6 +31,7 @@ public class CurrentPlayer implements Player {
 
     @Override
     public void calculateChanges(Core core) {
+
         if(previousSelectedCore == null){
             previousSelectedCore = core;
             return;
@@ -34,7 +39,6 @@ public class CurrentPlayer implements Player {
         if((previousSelectedCore == core)
                 || (previousSelectedCore.getState() == StateCore.BLACK)
                 || (previousSelectedCore.getState() != state)) {
-
             previousSelectedCore = null;
             return;
         }
@@ -48,4 +52,60 @@ public class CurrentPlayer implements Player {
         return state;
     }
 
+
+    @Override
+    public void updateCoreView(Core core) {
+        controller.updateFieldView(core);
+
+    }
+
+    @Override
+    public boolean _is_equivalent(org.omg.CORBA.Object other) {
+        return false;
+    }
+
+    @Override
+    public int _hash(int maximum) {
+        return 0;
+    }
+
+    @Override
+    public Object _duplicate() {
+        return null;
+    }
+
+    @Override
+    public void _release() {
+
+    }
+
+    @Override
+    public Request _request(String operation) {
+        return null;
+    }
+
+    @Override
+    public Request _create_request(Context ctx, String operation, NVList arg_list, NamedValue result) {
+        return null;
+    }
+
+    @Override
+    public Request _create_request(Context ctx, String operation, NVList arg_list, NamedValue result, ExceptionList exclist, ContextList ctxlist) {
+        return null;
+    }
+
+    @Override
+    public Policy _get_policy(int policy_type) {
+        return null;
+    }
+
+    @Override
+    public DomainManager[] _get_domain_managers() {
+        return new DomainManager[0];
+    }
+
+    @Override
+    public Object _set_policy_override(Policy[] policies, SetOverrideType set_add) {
+        return null;
+    }
 }

@@ -1,0 +1,60 @@
+module game{
+
+  enum SizeCore{ BIG_CORE, SMALL_CORE };
+  enum StateCore{ RED, GREEN, BLACK };
+
+  interface Point2D{
+
+     double getX();
+     void setX(in double x);
+     double getY();
+     void setY(in  double y);
+
+  };
+
+  interface Core{
+
+     SizeCore getSize();
+     void setSize(in SizeCore size);
+     Point2D getLocation();
+     void setLocation(in Point2D location);
+     unsigned long getId();
+     void setId(in unsigned long id);
+     unsigned long getCountPhage();
+     void setCountPhage(in unsigned long countPhage);
+     void updateCores(in Core sourceCore);
+     StateCore getState();
+
+  };
+
+  interface Player{
+
+     void calculateChanges(in Core core);
+     void updateCoreView(in Core core);
+     StateCore getState();
+
+  };
+
+  interface Field{
+
+            Core coreNext();
+            void startGame();
+            unsigned long getCountCores();
+            void stopGame();
+
+            void setPlayerOne(in Player player);
+            void setPlayerEnemy(in Player player);
+  };
+
+};
+
+
+module registry{
+ interface RegistryFactory{
+
+    void registry(in game::Player player);
+    wstring getPlayerOne();
+    wstring getPlayerEnemy();
+
+ };
+};

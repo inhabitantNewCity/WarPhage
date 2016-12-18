@@ -1,8 +1,9 @@
 package com.games.java.model.players;
 
-import com.games.java.model.field.Core;
+
 import com.games.java.model.field.Field;
-import com.games.java.model.utils.StateCore;
+import com.games.java.model.players.corba.idls.game.Core;
+import com.games.java.model.players.corba.idls.game.StateCore;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +20,9 @@ public class Referee {
 
     public Referee(Field field, Player currentPlayer, Player enemyPlayer) {
         this.field = field;
-        this.cores = field.getCores();
+        for(int i = 0; i < field.getCountCores(); i++) {
+            this.cores.add(field.coreNext());
+        }
         this.players[0] = currentPlayer;
         this.players[1] = enemyPlayer;
     }
