@@ -32,7 +32,6 @@ public class RegistryFactoryImpl extends RegistryFactoryPOA{
     private static NamingContextExt namingContextExt;
     private static POA rootpoa;
 
-
     public static void main(String[] args) {
         try {
             ORB orb = ORB.init(new String[2], corbaStartProp);
@@ -73,13 +72,13 @@ public class RegistryFactoryImpl extends RegistryFactoryPOA{
     public void registry(Player player) {
 
         new Thread(() -> {
-            try {
 
-                registryCurrentPlayer(player);
+            try {
                 countPlayersFlag++;
                 countPlayers++;
-                while (countPlayersFlag > 1);
-
+                registryCurrentPlayer(player);
+                while (countPlayersFlag < 2);
+                System.out.println("player two loging");
             } catch (ServantNotActive servantNotActive) {
                 servantNotActive.printStackTrace();
             } catch (WrongPolicy wrongPolicy) {
@@ -91,23 +90,27 @@ public class RegistryFactoryImpl extends RegistryFactoryPOA{
             } catch (NotFound notFound) {
                 notFound.printStackTrace();
             }
+
         }).run();
     }
 
     private void registryCurrentPlayer(Player player) throws ServantNotActive, WrongPolicy, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName, NotFound {
 
-        org.omg.CORBA.Object ref = rootpoa.servant_to_reference((PlayerPOA) player);
-        RegistryFactory rRef = RegistryFactoryHelper.narrow(ref);
-        NameComponent[] component = namingContextExt.to_name(NAME_PLAYERS_SERVICE + countPlayers);
-        namingContextExt.rebind(component, rRef );
+        NameComponent[] component;
+        if(countPlayersFlag == 1 )
+            component  = namingContextExt.to_name(NAME_MAIN_PLAYER + countPlayers);
+        else
+            component = namingContextExt.to_name(NAME_SECOND_PALAYER + countPlayers);
+        namingContextExt.rebind(component, player );
         players[countPlayersFlag - 1] = NAME_PLAYERS_SERVICE + countPlayers;
-
+        player.setFieldName(NAME_FIELD + (countPlayers - countPlayersFlag));
         System.out.println("Player number " + countPlayersFlag + " is loged");
     }
 
     @Override
     public String getPlayerOne() {
         countPlayersFlag = 0;
+
         return players[0];
     }
 
@@ -116,4 +119,6 @@ public class RegistryFactoryImpl extends RegistryFactoryPOA{
         countPlayersFlag = 0;
         return players[1];
     }
+
+
 }

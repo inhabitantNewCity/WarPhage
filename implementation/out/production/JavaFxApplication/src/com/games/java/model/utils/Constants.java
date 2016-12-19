@@ -69,4 +69,5 @@ public class Constants {
 
         public static String NAME_REGISTRY_SERVICE = "registry_service";
         public static String NAME_PLAYERS_SERVICE = "players_";
+        public static String NAME_FIELD = "field_";
 }

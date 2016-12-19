@@ -2,10 +2,10 @@ package com.games.java.controllers;
 
 import com.games.java.controllers.listeners.OncClickCoreListener;
 import com.games.java.model.players.CurrentPlayer;
-import com.games.java.model.players.Player;
 import com.games.java.model.players.Referee;
 import com.games.java.model.players.corba.idls.game.Core;
 import com.games.java.model.players.corba.idls.game.Field;
+import com.games.java.model.players.corba.idls.game.Player;
 import com.games.java.model.players.corba.idls.game.StateCore;
 import com.games.java.model.utils.generaters.GeneratorFactory;
 
@@ -38,8 +38,8 @@ public class StartController implements Controller {
     public void initialize() throws IOException {
 
         field = GeneratorFactory.getGenerator().generate();
-        field.setPlayerOne(playerOne);
-        playerOne.setController(this);
+        //field.setPlayerOne(playerOne);
+        ((com.games.java.model.players.Player) playerOne).setController(this);
         //field.setController(this);
         List<Group> coreViews = rendering(field);
         Group group = new Group();
@@ -121,6 +121,11 @@ public class StartController implements Controller {
     @Override
     public void setEnemy(Player player) {
         enemyPlayer= player;
+    }
+
+    @Override
+    public void setField(Field field) {
+        this.field = field;
     }
 
     @Override

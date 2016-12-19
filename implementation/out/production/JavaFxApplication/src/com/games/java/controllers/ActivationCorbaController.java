@@ -1,6 +1,9 @@
 package com.games.java.controllers;
 
 
+import com.games.java.controllers.connections.ConnectionFactory;
+import com.games.java.model.players.corba.idls.game.Field;
+import com.games.java.model.players.corba.idls.game.Player;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,14 +27,32 @@ public class ActivationCorbaController  {
     private TextField namePlaer;
 
     @FXML
+    public void initialize(){
+        //ConnectionFactory.getConnection()
+    }
+
+    @FXML
     public void createCorbaSettingsListeners(ActionEvent event) throws IOException {
         Stage primaryStage = (Stage)((Button) event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader();
+        Player player = ConnectionFactory.getConnection().getPlayerOne();
+        Player playerEnemy = ConnectionFactory.getConnection().getPlayerEnemy();
+        Field field = ConnectionFactory.getConnection().getField();
+
+        Controller controller = new StartController();
+        controller.setField(field);
+        controller.setPlayer(player);
+        controller.setEnemy(player);
+
+        loader.setController(controller);
         Parent root = loader.load(getClass().getResource("/fxmls/sample.fxml"));
+
+        //controller.setPlayer(player);
         primaryStage.setTitle("War Phage");
 
         SeterAnimation animation = SeterAnimation.getInstance();
         animation.set().play();
+        controller.startGame();
 
         Scene scene = new Scene(root, 920, 460);
 

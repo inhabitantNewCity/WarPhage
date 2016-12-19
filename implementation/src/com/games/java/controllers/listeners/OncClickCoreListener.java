@@ -2,8 +2,9 @@ package com.games.java.controllers.listeners;
 
 import com.games.java.controllers.Controller;
 
-import com.games.java.model.players.Player;
+
 import com.games.java.model.players.corba.idls.game.Core;
+import com.games.java.model.players.corba.idls.game.Player;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
@@ -26,7 +27,7 @@ public class OncClickCoreListener implements EventHandler<MouseEvent> {
         Player player = controller.getPlayer();
         Player enemy = controller.getEnemy();
 
-        player.setController(controller);
+        //player.setController(controller);
         //enemy.setController(controller);
 
         player.calculateChanges(core);

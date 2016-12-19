@@ -1,8 +1,11 @@
 package com.games.java.controllers;
 
 
-import com.games.java.model.players.Player;
+
+
 import com.games.java.model.players.corba.idls.game.Core;
+import com.games.java.model.players.corba.idls.game.Field;
+import com.games.java.model.players.corba.idls.game.Player;
 import javafx.scene.Group;
 
 /**
@@ -19,6 +22,7 @@ public interface Controller {
 
     void setPlayer(Player player);
     void setEnemy(Player player);
+    void setField(Field field);
 
     void startGame();
 }
