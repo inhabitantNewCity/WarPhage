@@ -10,7 +10,7 @@ import com.games.java.model.players.corba.idls.game.Player;
 public interface Connection {
 
     boolean isMainPlayer();
-    Player getPlayerOne() ;
+    com.games.java.model.players.Player getPlayerOne() ;
     Player getPlayerEnemy();
 
     Field getField();

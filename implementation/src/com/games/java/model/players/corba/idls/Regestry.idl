@@ -31,15 +31,22 @@ module game{
 
      void calculateChanges(in Core core);
      void updateCoreView(in Core core);
+
+     void setPlayerName(in wstring name);
+     wstring getPlayerName();
+
+     void setState(in StateCore state);
+     StateCore getState();
+
      void setFieldName(in wstring name);
      wstring getFieldName();
-     StateCore getState();
+
 
   };
 
   interface Field{
 
-            Core coreNext();
+            Core coreNext(in unsigned long i);
             void startGame();
             unsigned long getCountCores();
             void stopGame();
@@ -55,8 +62,8 @@ module registry{
  interface RegistryFactory{
 
     void registry(in game::Player player);
+    wstring getCurrentName();
     wstring getPlayerOne();
     wstring getPlayerEnemy();
-
  };
 };

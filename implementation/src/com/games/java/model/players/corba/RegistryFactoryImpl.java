@@ -2,6 +2,7 @@ package com.games.java.model.players.corba;
 
 import com.games.java.model.players.corba.idls.game.Player;
 import com.games.java.model.players.corba.idls.game.PlayerPOA;
+import com.games.java.model.players.corba.idls.game.StateCore;
 import com.games.java.model.players.corba.idls.registry.RegistryFactory;
 import com.games.java.model.players.corba.idls.registry.RegistryFactoryHelper;
 import com.games.java.model.players.corba.idls.registry.RegistryFactoryPOA;
@@ -19,6 +20,9 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.games.java.model.utils.Constants.*;
 
 /**
@@ -26,11 +30,13 @@ import static com.games.java.model.utils.Constants.*;
  */
 public class RegistryFactoryImpl extends RegistryFactoryPOA{
 
-    private int countPlayersFlag = 0;
-    private String[] players = new String[2];
-    private int countPlayers = 0;
+    private volatile int countPlayersFlag = 0;
+    private volatile String[] players = new String[2];
+    private volatile int countPlayers = 0;
     private static NamingContextExt namingContextExt;
     private static POA rootpoa;
+    private volatile Map<Player, String> CURRENT_PLAYERS = new HashMap<>();
+    public volatile String[] result = new String[1];
 
     public static void main(String[] args) {
         try {
@@ -92,33 +98,45 @@ public class RegistryFactoryImpl extends RegistryFactoryPOA{
             }
 
         }).run();
+
+    }
+
+    @Override
+    public String getCurrentName() {
+        return result[0];
     }
 
     private void registryCurrentPlayer(Player player) throws ServantNotActive, WrongPolicy, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName, NotFound {
 
         NameComponent[] component;
-        if(countPlayersFlag == 1 )
-            component  = namingContextExt.to_name(NAME_MAIN_PLAYER + countPlayers);
-        else
+        if(countPlayersFlag == 1 ) {
+            component = namingContextExt.to_name(NAME_MAIN_PLAYER + countPlayers);
+            players[countPlayersFlag - 1] = NAME_MAIN_PLAYER + countPlayers;
+            CURRENT_PLAYERS.put(player,players[countPlayersFlag-1]);
+        }
+        else {
             component = namingContextExt.to_name(NAME_SECOND_PALAYER + countPlayers);
-        namingContextExt.rebind(component, player );
-        players[countPlayersFlag - 1] = NAME_PLAYERS_SERVICE + countPlayers;
+            players[countPlayersFlag - 1] = NAME_SECOND_PALAYER + countPlayers;
+            CURRENT_PLAYERS.put(player, players[countPlayersFlag - 1]);
+        }
         player.setFieldName(NAME_FIELD + (countPlayers - countPlayersFlag));
+
         System.out.println("Player number " + countPlayersFlag + " is loged");
+        result[0] = players[countPlayersFlag - 1];
     }
 
     @Override
     public String getPlayerOne() {
-        countPlayersFlag = 0;
-
+        //countPlayersFlag = 0;
         return players[0];
     }
 
     @Override
     public String getPlayerEnemy() {
-        countPlayersFlag = 0;
+        //countPlayersFlag = 0;
         return players[1];
     }
+
 
 
 }

@@ -20,7 +20,7 @@ public interface Controller {
     Player getPlayer();
     Player getEnemy();
 
-    void setPlayer(Player player);
+    void setPlayer(com.games.java.model.players.Player player);
     void setEnemy(Player player);
     void setField(Field field);
 

@@ -34,8 +34,8 @@ public class FieldSimple extends FieldPOA implements Field {
             for (Core core: cores) {
                 if (core.getState() != StateCore.BLACK) {
                     core.setCountPhage(core.getCountPhage() + COUNT_ADDED_PHAGE);
-                    playerOne.updateCoreView(core);
-                    //playerEnemy.updateCoreView(cores);
+                    //playerOne.updateCoreView(core);
+                    playerEnemy.updateCoreView(core);
                 }
             }
         }));
@@ -48,8 +48,8 @@ public class FieldSimple extends FieldPOA implements Field {
        iterator = cores.iterator();
     }
 
-    public Core coreNext(){
-       return iterator.next();
+    public Core coreNext(int i){
+       return cores.get(i);
     }
 
     public void startGame(){

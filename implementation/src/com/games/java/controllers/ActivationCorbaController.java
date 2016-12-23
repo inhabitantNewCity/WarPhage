@@ -35,16 +35,16 @@ public class ActivationCorbaController  {
     public void createCorbaSettingsListeners(ActionEvent event) throws IOException {
         Stage primaryStage = (Stage)((Button) event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader();
-        Player player = ConnectionFactory.getConnection().getPlayerOne();
-        Player playerEnemy = ConnectionFactory.getConnection().getPlayerEnemy();
-        Field field = ConnectionFactory.getConnection().getField();
+        //Player player = ConnectionFactory.getConnection().getPlayerOne();
+        //Player playerEnemy = ConnectionFactory.getConnection().getPlayerEnemy();
+        //Field field = ConnectionFactory.getConnection().getField();
 
-        Controller controller = new StartController();
-        controller.setField(field);
-        controller.setPlayer(player);
-        controller.setEnemy(player);
+        //Controller controller = new StartController();
+        //controller.setField(field);
+        //controller.setPlayer(player);
+        //controller.setEnemy(playerEnemy);
 
-        loader.setController(controller);
+        //loader.setController(controller);
         Parent root = loader.load(getClass().getResource("/fxmls/sample.fxml"));
 
         //controller.setPlayer(player);
@@ -52,7 +52,7 @@ public class ActivationCorbaController  {
 
         SeterAnimation animation = SeterAnimation.getInstance();
         animation.set().play();
-        controller.startGame();
+        ((Controller)loader.getController()).startGame();
 
         Scene scene = new Scene(root, 920, 460);
 

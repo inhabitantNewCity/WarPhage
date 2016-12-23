@@ -21,7 +21,7 @@ public class Referee {
     public Referee(Field field, Player currentPlayer, Player enemyPlayer) {
         this.field = field;
         for(int i = 0; i < field.getCountCores(); i++) {
-            this.cores.add(field.coreNext());
+            this.cores.add(field.coreNext(i));
         }
         this.players[0] = currentPlayer;
         this.players[1] = enemyPlayer;

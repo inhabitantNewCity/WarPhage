@@ -8,7 +8,7 @@ import java.util.List;
 public interface Field extends com.games.java.model.players.corba.idls.game.Field {
 
     void initializing(List<Core> list);
-    Core coreNext();
+
     void startGame();
     int getCountCores();
     void stopGame();

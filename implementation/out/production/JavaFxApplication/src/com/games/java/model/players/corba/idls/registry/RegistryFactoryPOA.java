@@ -20,6 +20,7 @@ public abstract class RegistryFactoryPOA extends org.omg.PortableServer.Servant
     _methods.put ("registry", new java.lang.Integer (0));
     _methods.put ("getPlayerOne", new java.lang.Integer (1));
     _methods.put ("getPlayerEnemy", new java.lang.Integer (2));
+    _methods.put ("getCurrentName", new java.lang.Integer (3));
   }
 
   public org.omg.CORBA.portable.OutputStream _invoke (String $method,
@@ -58,6 +59,15 @@ public abstract class RegistryFactoryPOA extends org.omg.PortableServer.Servant
          out.write_wstring ($result);
          break;
        }
+
+        case 3:  // registry/RegistryFactory/getCurrentName
+        {
+            String $result = null;
+            $result = this.getCurrentName ();
+            out = $rh.createReply();
+            out.write_wstring ($result);
+            break;
+        }
 
        default:
          throw new org.omg.CORBA.BAD_OPERATION (0, org.omg.CORBA.CompletionStatus.COMPLETED_MAYBE);

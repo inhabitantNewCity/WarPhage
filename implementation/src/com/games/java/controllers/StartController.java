@@ -1,5 +1,6 @@
 package com.games.java.controllers;
 
+import com.games.java.controllers.connections.ConnectionFactory;
 import com.games.java.controllers.listeners.OncClickCoreListener;
 import com.games.java.model.players.CurrentPlayer;
 import com.games.java.model.players.Referee;
@@ -25,7 +26,7 @@ import static com.games.java.model.utils.Constants.*;
 public class StartController implements Controller {
 
     private SeterAnimation seterAnimation = SeterAnimation.getInstance();
-    private Player playerOne = new CurrentPlayer(StateCore.GREEN);
+    private com.games.java.model.players.Player playerOne;
     private Player enemyPlayer;
     private Field field;
     private Referee referee; //= new Referee(field, playerOne, enemyPlayer);
@@ -37,10 +38,11 @@ public class StartController implements Controller {
     @FXML
     public void initialize() throws IOException {
 
-        field = GeneratorFactory.getGenerator().generate();
-        //field.setPlayerOne(playerOne);
+        playerOne = ConnectionFactory.getConnection().getPlayerOne();
+        enemyPlayer = ConnectionFactory.getConnection().getPlayerEnemy();
+        field = ConnectionFactory.getConnection().getField();
+
         ((com.games.java.model.players.Player) playerOne).setController(this);
-        //field.setController(this);
         List<Group> coreViews = rendering(field);
         Group group = new Group();
         group.getChildren().addAll(coreViews);
@@ -54,7 +56,7 @@ public class StartController implements Controller {
     private List<Group> rendering(Field field) throws IOException {
         List<Group> images = new LinkedList<>();
         for(int i = 0; i < field.getCountCores(); i++ ){
-            images.add(createCoreView(field.coreNext()));
+            images.add(createCoreView(field.coreNext(i)));
         }
         return images;
     }
@@ -114,7 +116,7 @@ public class StartController implements Controller {
     }
 
     @Override
-    public void setPlayer(Player player) {
+    public void setPlayer(com.games.java.model.players.Player player) {
         playerOne = player;
     }
 

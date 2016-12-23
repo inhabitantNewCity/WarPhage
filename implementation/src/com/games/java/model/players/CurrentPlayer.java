@@ -19,6 +19,7 @@ public class CurrentPlayer extends PlayerPOA implements Player {
     private Core previousSelectedCore;
     private StateCore state;
     private String fieldName;
+    private String name;
 
     public CurrentPlayer(StateCore state){
         this.state = state;
@@ -62,6 +63,21 @@ public class CurrentPlayer extends PlayerPOA implements Player {
     @Override
     public void setFieldName(String name) {
        this.fieldName = name;
+    }
+
+    @Override
+    public void setPlayerName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getPlayerName() {
+        return name;
+    }
+
+    @Override
+    public void setState(StateCore state) {
+        this.state = state;
     }
 
     @Override

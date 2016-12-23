@@ -39,7 +39,8 @@ public abstract class FieldPOA extends org.omg.PortableServer.Servant
        case 0:  // game/Field/coreNext
        {
          com.games.java.model.players.corba.idls.game.Core $result = null;
-         $result = this.coreNext ();
+         int i = in.read_ulong();
+         $result = this.coreNext (i);
          out = $rh.createReply();
          com.games.java.model.players.corba.idls.game.CoreHelper.write (out, $result);
          break;

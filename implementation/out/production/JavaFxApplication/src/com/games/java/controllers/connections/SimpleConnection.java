@@ -30,6 +30,7 @@ import static com.games.java.model.utils.Constants.*;
 public class SimpleConnection implements Connection {
 
     private Player playerOne;
+    private com.games.java.model.players.Player playerOneImpl;
     private Player playerEnemy;
     private Field field;
 
@@ -55,6 +56,41 @@ public class SimpleConnection implements Connection {
             context = new InitialContext(env);
             factory = RegistryFactoryHelper.narrow(nameService.resolve_str(NAME_REGISTRY_SERVICE));
 
+            // registry local player
+            playerOneImpl = new CurrentPlayer(StateCore.GREEN);
+
+            org.omg.CORBA.Object ref = rootPoa.servant_to_reference((CurrentPlayer) playerOneImpl);
+            playerOne = PlayerHelper.narrow(ref);
+
+            org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+            nameService = NamingContextExtHelper.narrow(objRef);
+            NameComponent[] component = nameService.to_name(NAME_MAIN_PLAYER);
+            nameService.rebind(component, playerOne);
+
+            System.out.println("player one is registring with name: " + NAME_MAIN_PLAYER);
+
+            factory.registry(playerOne);
+
+            namePlayer = factory.getCurrentName();
+            nameService.rebind(nameService.to_name(namePlayer), playerOne);
+
+            Thread.sleep(100);
+
+            if(isMainPlayer()) {
+                String nameEnemy = factory.getPlayerEnemy();
+                System.out.println("it is main class with name: " + namePlayer + " and enemy with name: " + nameEnemy);
+                playerEnemy = PlayerHelper.narrow(nameService.resolve_str(nameEnemy));
+
+            } else {
+                playerOneImpl.setState(StateCore.RED);
+                String nameEnemy = factory.getPlayerOne();
+                System.out.println("it is enemy class with name: " + namePlayer + " and enemy with name: " + nameEnemy);
+                playerEnemy = PlayerHelper.narrow(nameService.resolve_str(nameEnemy));
+
+            }
+
+            System.out.println("player one is registred with name: " + namePlayer);
+
         } catch (AdapterInactive adapterInactive) {
             adapterInactive.printStackTrace();
         } catch (InvalidName invalidName) {
@@ -67,51 +103,26 @@ public class SimpleConnection implements Connection {
             cannotProceed.printStackTrace();
         } catch (NotFound notFound) {
             notFound.printStackTrace();
+        } catch (WrongPolicy wrongPolicy) {
+            wrongPolicy.printStackTrace();
+        } catch (ServantNotActive servantNotActive) {
+            servantNotActive.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-
     }
 
     @Override
-    public Player getPlayerOne() {
-        if(playerOne == null) {
-            try {
-
-                CurrentPlayer playerOne = new CurrentPlayer(StateCore.GREEN);
-
-                org.omg.CORBA.Object ref = rootPoa.servant_to_reference(playerOne);
-                Player rRef = PlayerHelper.narrow(ref);
-
-                org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-                nameService = NamingContextExtHelper.narrow(objRef);
-                NameComponent[] component = nameService.to_name(NAME_MAIN_PLAYER);
-                nameService.rebind(component, rRef);
-
-                factory.registry(rRef);
-                namePlayer = factory.getPlayerOne();
-
-            } catch (WrongPolicy wrongPolicy) {
-                wrongPolicy.printStackTrace();
-            } catch (InvalidName invalidName) {
-                invalidName.printStackTrace();
-            } catch (ServantNotActive servantNotActive) {
-                servantNotActive.printStackTrace();
-            } catch (org.omg.CosNaming.NamingContextPackage.InvalidName invalidName) {
-                invalidName.printStackTrace();
-            } catch (CannotProceed cannotProceed) {
-                cannotProceed.printStackTrace();
-            } catch (NotFound notFound) {
-                notFound.printStackTrace();
-            }
-        }
-        return playerOne;
+    public com.games.java.model.players.Player getPlayerOne() {
+        return playerOneImpl;
     }
 
 
     @Override
     public Player getPlayerEnemy() {
-        if(playerEnemy == null)
-            playerEnemy = PlayerHelper.narrow(orb.string_to_object(factory.getPlayerEnemy()));
+        System.out.println("getPlayerEnemy");
+        System.out.println("player one is " + factory.getPlayerOne());
+        System.out.println("enemy is " + factory.getPlayerEnemy());
         return playerEnemy;
     }
 
@@ -121,8 +132,10 @@ public class SimpleConnection implements Connection {
             if (isMainPlayer()) {
                 field = GeneratorFactory.getGenerator().generate();
                 registryField(field);
+                System.out.println("Main Field: " + playerOne.getFieldName());
                 return field;
             }
+            System.out.println("External Field");
             return getFieldFromService();
         } catch (WrongPolicy wrongPolicy) {
             wrongPolicy.printStackTrace();
@@ -144,8 +157,11 @@ public class SimpleConnection implements Connection {
 
     private void registryField(Field field) throws ServantNotActive, WrongPolicy, org.omg.CosNaming.NamingContextPackage.InvalidName, NotFound, CannotProceed {
 
+        field.setPlayerOne(playerOne);
+        field.setPlayerEnemy(playerEnemy);
         Field fieldRef = FieldHelper.narrow(rootPoa.servant_to_reference((FieldSimple) field));
         nameService.rebind(nameService.to_name(playerOne.getFieldName()), fieldRef);
+
 
     }
 
